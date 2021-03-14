@@ -12,10 +12,12 @@ import MobileCoreServices
 
 class ViewController: UIViewController, UIImagePickerControllerDelegate,
                                         UINavigationControllerDelegate  {
-    //outlets
+    //
     @IBOutlet var imageView: UIImageView!
     @IBOutlet var takePictureButton: UIButton!
- 
+
+    //specifiying where the picture and videos come from
+    
    @objc var avPlayerViewController: AVPlayerViewController!
     @objc var image: UIImage?
     @objc var movieURL: URL?
@@ -40,14 +42,19 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate,
         pickMediaFromSource(.photoLibrary)
     }
     
+    //
+    
     @objc func updateDisplay() {
            if let mediaType = lastChosenMediaType {
+            // for selecting an image from library
+            
             if mediaType == (kUTTypeImage as NSString) as String {
                    imageView.image = image!
                    imageView.isHidden = false
                    if avPlayerViewController != nil {
                        avPlayerViewController!.view.isHidden = true
                    }
+                // for selecting the video
             } else if mediaType == (kUTTypeMovie as NSString) as String {
                    if avPlayerViewController == nil {
                        avPlayerViewController = AVPlayerViewController()
@@ -68,6 +75,8 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate,
            }
        }
     
+    //defining the constrains for both landscape and potrait modes
+    
     @objc func setAVPlayerViewLayoutConstraints() {
            let avPlayerView = avPlayerViewController!.view
            avPlayerView?.translatesAutoresizingMaskIntoConstraints = false
@@ -80,7 +89,9 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate,
                            withVisualFormat: "V:|[avPlayerView]-0-[takePictureButton]",
                            options: .alignAllLeft, metrics:nil, views:views))
        }
-    //
+    
+    // delegate methods fro picker view
+    
     @objc func pickMediaFromSource(_ sourceType:UIImagePickerController.SourceType) {
          let mediaTypes =
                UIImagePickerController.availableMediaTypes(for: sourceType)!
@@ -103,6 +114,8 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate,
          }
      }
  
+    // selecting of an image and cancel function
+    
     private func imagePickerController(_ picker: UIImagePickerController,
                        didFinishPickingMediaWithInfo info: [String : AnyObject]) {
         lastChosenMediaType = info[UIImagePickerController.InfoKey.mediaType.rawValue] as? String
